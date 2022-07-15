@@ -10,19 +10,29 @@ class App extends React.Component {
     super(props);
     // THIS IS THE ONLY TIME we do direct assignment
     // to this.state
-    this.state = { lat: null }; // state object
+    this.state = { lat: null, errorMessage: '' }; // state object
 
     // gets users location based on browser
     window.navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({ lat: position.coords.latitude})
       },
-      (err) => console.log(err) // failed error callback
+      err => {
+        this.setState({ errorMessage: err.message})
+      } // failed error callback
     );
   }
   // Class! React says we have to define RENDER!!
   render() {
-    return <div>Latitude: {this.state.lat} </div>;
+    if (this.state.errorMessage && !this.state.lat) {
+      return <div>Error: {this.state.errorMessage}</div>
+    }
+
+    if (!this.state.errorMessage && this.state.lat) {
+      return <div>Latitude: {this.state.lat} </div>
+    }
+
+    return <div>Loading...</div>
   }
 }
 
