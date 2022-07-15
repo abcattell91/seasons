@@ -8,17 +8,21 @@ class App extends React.Component {
     // This function has its own constructor so using super
     // Super is a reference to parents constructor
     super(props);
+    // THIS IS THE ONLY TIME we do direct assignment
+    // to this.state
     this.state = { lat: null }; // state object
+
+    // gets users location based on browser
+    window.navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({ lat: position.coords.latitude})
+      },
+      (err) => console.log(err) // failed error callback
+    );
   }
   // Class! React says we have to define RENDER!!
   render() {
-    // gets users location based on browser
-    window.navigator.geolocation.getCurrentPosition(
-      (position) => console.log(position), // success callback
-      (err) => console.log(err) // failed error callback
-    );
-
-    return <div>Latitude: </div>;
+    return <div>Latitude: {this.state.lat} </div>;
   }
 }
 
