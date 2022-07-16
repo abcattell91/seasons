@@ -1,26 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 class App extends React.Component {
-  // Special function which is not required by react
-  // Anytime a new instance is created this is called
-  constructor(props) {
-    // Borrow from react base class. react.component.
-    // This function has its own constructor so using super
-    // Super is a reference to parents constructor
-    super(props);
-    // THIS IS THE ONLY TIME we do direct assignment
-    // to this.state
-    this.state = { lat: null, errorMessage: '' }; // state object
+  state = { lat: null, errorMessage: '' };
 
-    // gets users location based on browser
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({ lat: position.coords.latitude})
-      },
-      err => {
-        this.setState({ errorMessage: err.message})
-      } // failed error callback
+      position => this.setState({ lat: position.coords.latitude}),
+      err => this.setState({ errorMessage: err.message})
     );
+  };
+
+  componentDidUpdate() {
+    console.log('My component was rerendered')
   }
   // Class! React says we have to define RENDER!!
   render() {
@@ -29,7 +21,7 @@ class App extends React.Component {
     }
 
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Latitude: {this.state.lat} </div>
+      return <SeasonDisplay lat={this.state.lat} />
     }
 
     return <div>Loading...</div>
